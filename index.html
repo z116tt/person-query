@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 新增：QQ浏览器兼容 -->
+<meta name="referrer" content="no-referrer">
 <title>员工查询系统 - 内部版</title>
 <style>
 * {
@@ -171,8 +173,9 @@ function search() {
   let u = users.find(x => x.name === n);
   let resultDiv = document.getElementById("result");
   if (u) {
+    // 关键修改：给img加上crossorigin="anonymous"
     resultDiv.innerHTML = 
-      `<img src="${u.photo}" alt="${u.name}"><div class="info"><strong>${u.name}</strong>${u.info}</div>`;
+      `<img src="${u.photo}" alt="${u.name}" crossorigin="anonymous"><div class="info"><strong>${u.name}</strong>${u.info}</div>`;
   } else {
     resultDiv.innerHTML = "<p class='error'>未找到该员工</p>";
   }
