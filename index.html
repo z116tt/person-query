@@ -1,212 +1,182 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <!-- 手机自适应核心配置，禁止缩放 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>单位人员信息查询</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: "微软雅黑", sans-serif; 
-            background: #f5f5f5; 
-            padding: 20px; 
-            max-width: 600px; 
-            margin: 0 auto; 
-        }
-        /* 搜索框样式（手机全屏适配） */
-        .search-box { 
-            width: 100%; 
-            height: 50px; 
-            border: 2px solid #2f54eb; 
-            border-radius: 25px; 
-            display: flex; 
-            align-items: center; 
-            padding: 0 20px; 
-            margin-bottom: 30px; 
-            background: #fff; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .search-input { 
-            flex: 1; 
-            border: none; 
-            outline: none; 
-            font-size: 18px; 
-            height: 100%; 
-            padding: 0 10px; 
-        }
-        .search-input::placeholder { color: #999; }
-        /* 结果展示卡片 */
-        .result-card { 
-            background: #fff; 
-            border-radius: 15px; 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 3px 15px rgba(0,0,0,0.1); 
-            display: none;
-        }
-        .card-title { 
-            font-size: 22px; 
-            color: #2f54eb; 
-            font-weight: bold; 
-            text-align: center; 
-            margin-bottom: 15px; 
-            border-bottom: 1px solid #eee; 
-            padding-bottom: 10px;
-        }
-        /* 照片样式（点击放大） */
-        .person-photo { 
-            width: 150px; 
-            height: 150px; 
-            border-radius: 10px; 
-            object-fit: cover; 
-            display: block; 
-            margin: 0 auto 20px; 
-            border: 3px solid #2f54eb; 
-        }
-        /* 信息样式（分栏，手机适配） */
-        .person-info { 
-            font-size: 17px; 
-            line-height: 2.2; 
-            color: #333; 
-        }
-        .info-item { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 0 10px;
-        }
-        .info-label { 
-            font-weight: bold; 
-            color: #666; 
-        }
-        /* 提示文字 */
-        .tip-text { 
-            text-align: center; 
-            color: #999; 
-            font-size: 16px; 
-            margin-top: 50px; 
-        }
-        /* 放大照片的遮罩层 */
-        .photo-mask { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.8); 
-            display: none; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 999; 
-        }
-        .big-photo { 
-            max-width: 90%; 
-            max-height: 90%; 
-            border-radius: 10px; 
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>员工查询系统 - 内部版</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Microsoft YaHei", sans-serif;
+  background-color: #f0f8ff;
+  color: #333;
+  line-height: 1.6;
+}
+/* 顶部声明栏 */
+.header-notice {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 14px;
+  border-bottom: 1px solid #bbdefb;
+}
+/* 主容器 */
+.container {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+/* 登录/查询区域卡片 */
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+}
+h2 {
+  color: #1976d2;
+  margin-bottom: 25px;
+  text-align: center;
+  font-size: 22px;
+}
+input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 1px solid #bbdefb;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #f5faff;
+}
+input:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #1976d2;
+}
+#result {
+  margin-top: 25px;
+  padding: 20px;
+  background-color: #f5faff;
+  border-radius: 8px;
+  border: 1px solid #e3f2fd;
+}
+img {
+  max-width: 180px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+  display: block;
+  margin: 0 auto 15px;
+}
+.info {
+  font-size: 15px;
+  color: #333;
+  text-align: left;
+}
+.info strong {
+  color: #1976d2;
+  font-size: 18px;
+  display: block;
+  margin-bottom: 8px;
+  text-align: center;
+}
+/* 错误提示 */
+.error {
+  color: #d32f2f;
+  text-align: center;
+  margin-top: 15px;
+}
+</style>
 </head>
 <body>
-    <!-- 搜索框 -->
-    <div class="search-box">
-        <input type="text" class="search-input" id="searchInput" placeholder="请输入姓名查询（如：张一、张3）">
-    </div>
+<!-- 顶部声明 -->
+<div class="header-notice">
+  本系统为内部使用平台，仅用于内部工作用途，严禁外部传播、转载。如有侵权请联系管理员立即删除。
+</div>
 
-    <!-- 结果展示卡片 -->
-    <div class="result-card" id="resultCard">
-        <h2 class="card-title" id="personName"></h2>
-        <img src="" alt="照片" class="person-photo" id="personPhoto" onclick="showBigPhoto(this.src)">
-        <div class="person-info">
-            <div class="info-item">
-                <span class="info-label">学历：</span>
-                <span id="personEdu"></span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">岗位：</span>
-                <span id="personJob"></span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">资质：</span>
-                <span id="personCert"></span>
-            </div>
-            <!-- 可新增字段，如：电话、部门，复制上面的info-item即可 -->
-        </div>
-    </div>
+<div class="container">
+  <!-- 登录区域 -->
+  <div id="loginArea" class="card">
+    <h2>员工查询系统</h2>
+    <input type="password" id="password" placeholder="请输入访问密码">
+    <button onclick="login()">验证进入</button>
+  </div>
 
-    <!-- 无结果提示 -->
-    <div class="tip-text" id="tipText">输入姓名后自动查询，支持精准匹配</div>
+  <!-- 查询区域 -->
+  <div id="searchArea" class="card" style="display:none">
+    <h2>员工信息查询</h2>
+    <input type="text" id="name" placeholder="输入员工姓名">
+    <button onclick="search()">查询</button>
+    <div id="result"></div>
+  </div>
+</div>
 
-    <!-- 照片放大层 -->
-    <div class="photo-mask" id="photoMask" onclick="hideBigPhoto()">
-        <img src="" alt="放大照片" class="big-photo" id="bigPhoto">
-    </div>
+<script>
+const PASSWORD = "11111111";
 
-    <script>
-        // 1. 录入人员信息（核心：复制{}里的内容，新增人员直接加逗号再粘一份）
-        const personData = [
-            { name: "张一", edu: "本科", job: "11", cert: "一", photo: "张一.jpg" },
-            
-            { name: "张3", edu: "专科", job: "13", cert: "三", photo: "张3.jpg" },
-            { name: "张4", edu: "本科", job: "14", cert: "四", photo: "张4.jpg" },
-            { name: "张5", edu: "专科", job: "15", cert: "五", photo: "张5.jpg" },
-            { name: "张6", edu: "高中", job: "16", cert: "六", photo: "张6.jpg" }
-        ];
+const users = [
+  { name: "冯光武", photo: "冯光武.jpg", info: "安规考试成绩：100<br>人员资质：高压电工证（有效期2024年5月10日-2030年5月9日）" },
+  { name: "冯乔海", photo: "冯乔海.jpg", info: "安规考试成绩：100<br>人员资质：高压电工证（有效期2023年8月10日-2029年8月9日）" },
+  { name: "冯乔伦", photo: "冯乔伦.jpg", info: "安规考试成绩：100<br>人员资质：配电两种人（考试时间2025年11月25日）" },
+  { name: "冯小建", photo: "冯小建.jpg", info: "安规考试成绩：100<br>人员资质：无" },
+  { name: "冯于志", photo: "冯于志.jpg", info: "安规考试成绩：100<br>人员资质：无" },
+  { name: "郭贵勇", photo: "郭贵勇.jpg", info: "安规考试成绩：100<br>人员资质：无" },
+  { name: "郭小兵", photo: "郭小兵.jpg", info: "安规考试成绩：100<br>人员资质：高压电工证（有效期2023年8月10日-2029年8月9日）" },
+  { name: "郭正江", photo: "郭正江.jpg", info: "安规考试成绩：90<br>人员资质：无" },
+  { name: "蒋顺", photo: "蒋顺.jpg", info: "安规考试成绩：90<br>人员资质：无" },
+  { name: "李映忠", photo: "李映忠.jpg", info: "安规考试成绩：90<br>人员资质：无" },
+  { name: "林汝志", photo: "林汝志.jpg", info: "安规考试成绩：100<br>人员资质：无" },
+  { name: "刘清河", photo: "刘清河.jpg", info: "安规考试成绩：100<br>人员资质：吊车司机资质（有效期2025年9月8日到长期）" },
+  { name: "龙迪", photo: "龙迪.jpg", info: "安规考试成绩：100<br>人员资质：无" },
+  { name: "欧书龙", photo: "欧书龙.jpg", info: "安规考试成绩：100<br>人员资质：无" },
+  { name: "韦昌海", photo: "韦昌海.jpg", info: "安规考试成绩：90<br>人员资质：无" },
+  { name: "于以明", photo: "于以明.jpg", info: "安规考试成绩：100<br>人员资质：高压电工证（有效期2024年11月1日-2030年10月31日）" },
+  { name: "张伯超", photo: "张伯超.jpg", info: "安规考试成绩：100<br>人员资质：无" },
+  { name: "赵龙龙", photo: "赵龙龙.jpg", info: "安规考试成绩：100<br>人员资质：无" },
+  { name: "周荣亮", photo: "周荣亮.jpg", info: "安规考试成绩：100<br>人员资质：配电两种人（考试时间2025年8月25日）" },
+  { name: "邹加兵", photo: "邹加兵.jpg", info: "安规考试成绩：100<br>人员资质：低压电工证（有效期2022年11月14日-2028年11月13日）" }
+];
 
-        // 2. 获取页面元素
-        const searchInput = document.getElementById('searchInput');
-        const resultCard = document.getElementById('resultCard');
-        const tipText = document.getElementById('tipText');
-        const personName = document.getElementById('personName');
-        const personPhoto = document.getElementById('personPhoto');
-        const personEdu = document.getElementById('personEdu');
-        const personJob = document.getElementById('personJob');
-        const personCert = document.getElementById('personCert');
-        const photoMask = document.getElementById('photoMask');
-        const bigPhoto = document.getElementById('bigPhoto');
+function login() {
+  let pwd = document.getElementById("password").value.trim();
+  if (pwd === PASSWORD) {
+    document.getElementById("loginArea").style.display = "none";
+    document.getElementById("searchArea").style.display = "block";
+  } else {
+    alert("密码错误，请重新输入！");
+  }
+}
 
-        // 3. 搜索功能（输入即查，无需点击按钮）
-        searchInput.addEventListener('input', function() {
-            const inputName = this.value.trim();
-            if (!inputName) {
-                resultCard.style.display = 'none';
-                tipText.style.display = 'block';
-                tipText.innerText = '输入姓名后自动查询，支持精准匹配';
-                return;
-            }
-            // 匹配人员信息
-            const person = personData.find(item => item.name === inputName);
-            if (person) {
-                resultCard.style.display = 'block';
-                tipText.style.display = 'none';
-                // 填充信息
-                personName.innerText = person.name;
-                personPhoto.src = person.photo;
-                personEdu.innerText = person.edu;
-                personJob.innerText = person.job;
-                personCert.innerText = person.cert;
-            } else {
-                resultCard.style.display = 'none';
-                tipText.style.display = 'block';
-                tipText.innerText = '未找到该人员信息，请检查姓名';
-            }
-        });
-
-        // 4. 照片放大功能
-        function showBigPhoto(src) {
-            photoMask.style.display = 'flex';
-            bigPhoto.src = src;
-        }
-        // 点击遮罩层关闭放大照片
-        function hideBigPhoto() {
-            photoMask.style.display = 'none';
-        }
-
-        // 5. 按回车键清空搜索框
-        searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                this.value = '';
-            }
-        });
-    </script>
+function search() {
+  let n = document.getElementById("name").value.trim();
+  let u = users.find(x => x.name === n);
+  let resultDiv = document.getElementById("result");
+  if (u) {
+    resultDiv.innerHTML = 
+      `<img src="${u.photo}" alt="${u.name}"><div class="info"><strong>${u.name}</strong>${u.info}</div>`;
+  } else {
+    resultDiv.innerHTML = "<p class='error'>未找到该员工</p>";
+  }
+}
+</script>
 </body>
 </html>
